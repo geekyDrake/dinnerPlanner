@@ -6,18 +6,16 @@ the "where were we?" when picking the project back up after a break.
 ## Now
 _Hand-off between chats. Replaced (not appended) by `/wrap` at the end of each chat._
 
-- **Branch:** `setup/workflow`: 1 squashed commit + this wrap commit. Not pushed, no PR yet.
-- **Last done:**
-  - Workflow set up: CLAUDE.md, `/next` + `/wrap` skills, git hooks, docs skeleton
-  - Spec finished (v0.6, no open questions)
-  - Pivoted from native iOS to a web app (PWA): [ADR 001](decisions/001-web-pwa-over-native-ios.md)
+- **Branch:** `docs/screens` (local only; remote `setup/workflow` was deleted). Push everything
+  together later and open one PR into `main`.
+- **Last done:** `docs/screens.md` v0.2: journeys, 6 screens (3 places: Weeks, Shopping,
+  Settings), nav map, Must-feature coverage. Spec v0.7: weeks not days, weekly review before
+  shopping, Mon–Sun grocery week, grocery ticks shown on Card 1, Google sign-in.
 - **In progress:** nothing half-finished.
-- **Next step:** offer to push `setup/workflow` and open a PR into `main` (ask first), then start
-  **Phase 2: Screens** on a new branch `docs/screens`, beginning with "List every screen +
-  navigation map" in a new `docs/screens.md`. Use the user's Card 1 / Card 2 ASCII sketches in
-  `docs/initialDesignThoughtsPreAI.md` as the starting point for the instructions screens.
+- **Next step:** Phase 2 "ASCII sketch per screen (iPad first)". Instructions cards start from
+  the user's Card 1 / Card 2 sketches in `docs/initialDesignThoughtsPreAI.md` (meal-kit card layout).
 - **Context for next chat:**
-  - Use **dummy data**: the user is still working out card scanning; real recipes aren't needed until Phase 6.
+  - Use **dummy data**; real recipes aren't needed until Phase 6.
   - User's iPad maxes out at **iPadOS 17** (affects Wake Lock; see ADR 001).
   - User reviews before every commit; never commit to `main`.
 - **Open questions:** none.
@@ -72,7 +70,7 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [x] Prioritise features: must / should / later
 
 ### Phase 2: Screens
-- [ ] List every screen + navigation map (`docs/screens.md`)
+- [x] List every screen + navigation map (`docs/screens.md`)
 - [ ] ASCII sketch per screen (iPad first)
 - [ ] Responsive strategy: how each screen adapts across desktop, iPad and phone widths (breakpoints, what collapses)
 - [ ] Review the sketches against "fewest taps" principle
@@ -80,7 +78,7 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 ### Phase 3: Architecture
 - [ ] ADR: front-end framework + tooling (e.g. React/Vite vs Next.js vs SvelteKit)
 - [ ] ADR: backend + DB platform (e.g. Supabase vs Firebase vs Vercel + Postgres)
-- [ ] ADR: auth (passkeys / magic link) + recipe access allow-list
+- [ ] ADR: auth (Google sign-in, own user ID + linked identities) + recipe access allow-list
 - [ ] ADR: data model
 - [ ] ADR: where scheduling runs (client vs server job)
 - [ ] Spike (iPadOS 17): keep-awake via Wake Lock API with silent-video fallback
