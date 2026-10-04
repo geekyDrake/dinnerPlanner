@@ -1,6 +1,6 @@
 # Dinner Planner: Spec
 
-**Status:** draft v0.7. Platform: web app (PWA), see ADR 001. No implementation details here (those go in ADRs).
+**Status:** draft v0.8. Platform: web app (PWA), see ADR 001. No implementation details here (those go in ADRs).
 
 ## Problem
 Planning dinners for a diet takes effort: picking varied meals from a recipe bank and
@@ -27,9 +27,11 @@ cook and shop.
 - **Plan**: upcoming weeks (~1 month ahead, Mon–Sun), each a set of cook sessions. The app
   doesn't assign days: the user decides when in the week to cook.
 - **History**: past cook sessions; used to avoid repeats until the bank is exhausted.
-- **Pantry**: checklist of long-life items the user already has (spices, oils, sauces).
+- **Pantry**: checklist of pantry staples the user already has (spices, oils, sauces).
+- **Ingredient kind**: *fresh*, *long-life* (bought by amount: rice, tins, pasta) or
+  *pantry staple* (have / out of). Set per ingredient in the recipe data.
 - **Grocery list**: what to buy for one week (Mon–Sun) = (ingredients for that week's sessions) − (pantry).
-- **Preferences**: hard rules (never / veg-only) vs soft dislikes (less often).
+- **Preferences**: hard rules (food groups I don't eat, never-ingredients) vs soft dislikes (less often).
 
 ## Features
 
@@ -47,13 +49,17 @@ cook and shop.
 - **M5. Grocery list** *(first-class feature)*: aggregated quantities for a fixed
   **Mon–Sun week**, scaled to each session's portions, minus pantry items. Check items off;
   ticks also show on each recipe's Card 1 ingredients. Toast notifications for actions.
-- **M6. Pantry checklist**: mark long-life items you have / are out of. Feeds the grocery list.
-- **M7. Meal instructions**: Card 1 (title, image, macros, ingredients, equipment) and
-  Card 2 (numbered steps), following the layout of the meal-kit cards I'm used to. Screen stays awake while open (Wake Lock API).
+- **M6. Pantry checklist**: mark pantry staples you have / are out of. Feeds the grocery list.
+  The list is built from the recipes' pantry-staple ingredients (no manual adding).
+- **M7. Meal instructions**: Card 1 *Overview* (title, image, times, macros, ingredients,
+  equipment) and Card 2 *Cook* (ingredient amounts beside the numbered steps, each step with
+  an optional photo). Layout in `screens.md`. Screen stays awake while open (Wake Lock API).
 - **M8. Card import** (my own tool, not an in-app feature): photos of a card's front + back
   → AI extraction → review & correct (hole punches) → saved to my private recipe bank,
-  including the dish photo.
-- **M9. Preferences**: veg/non-veg restriction; hard vs soft dislikes.
+  including the dish photo and step photos.
+- **M9. Preferences**: food groups I don't eat (multi-select: meat, poultry, fish, shellfish,
+  pork, beef, dairy…, with quick picks like Vegetarian / No seafood); hard vs soft dislikes.
+  Asked on first run; later changes apply from the week after next (popup explains).
 - **M10. Accounts**: Google sign-in. Accounts are keyed on our own user ID with linked
   sign-in identities, so other methods can be added later. Each user's data is private to them.
 
@@ -63,6 +69,8 @@ cook and shop.
 - **S3. Macros on the plan** (calorie tracking per day/week).
 - **S4. Reminders**: push notifications for cook days and shopping day
   (needs the app added to the iPad home screen).
+- **S5. Bulk buy**: combine 2–4 weeks into one grocery list to stock up on long-life items;
+  ticks apply to each week, so later weeks only show what's left (mostly fresh).
 
 ### Later / stretch
 - **L1.** Apple Health integration (no web API, so this would need a native client; see ADR 001).

@@ -6,18 +6,19 @@ the "where were we?" when picking the project back up after a break.
 ## Now
 _Hand-off between chats. Replaced (not appended) by `/wrap` at the end of each chat._
 
-- **Branch:** `docs/screens` (local only; remote `setup/workflow` was deleted). Push everything
-  together later and open one PR into `main`.
-- **Last done:** `docs/screens.md` v0.2: journeys, 6 screens (3 places: Weeks, Shopping,
-  Settings), nav map, Must-feature coverage. Spec v0.7: weeks not days, weekly review before
-  shopping, Mon–Sun grocery week, grocery ticks shown on Card 1, Google sign-in.
+- **Branch:** `docs/screens`, pushed. No PR yet (`gh` needs `gh auth login`).
+- **Last done:** `docs/screens.md` v0.4: journeys, 6 screens (3 places: Weeks, Shopping,
+  Settings), nav map, iPad sketches of every screen. Spec v0.8: weeks not days, weekly review,
+  Mon–Sun grocery week, bulk buy (S5), ingredient kinds (fresh / long-life / pantry staple),
+  diet as food groups, Google sign-in, Card 1 Overview / Card 2 Cook.
 - **In progress:** nothing half-finished.
-- **Next step:** Phase 2 "ASCII sketch per screen (iPad first)". Instructions cards start from
-  the user's Card 1 / Card 2 sketches in `docs/initialDesignThoughtsPreAI.md` (meal-kit card layout).
+- **Next step:** open a PR for `docs/screens` into `main` (ask first), then Phase 2
+  "Responsive strategy" (desktop / iPad / phone: breakpoints, what collapses, tab bar position).
 - **Context for next chat:**
   - Use **dummy data**; real recipes aren't needed until Phase 6.
   - User's iPad maxes out at **iPadOS 17** (affects Wake Lock; see ADR 001).
-  - User reviews before every commit; never commit to `main`.
+  - Card 2 step photos should be small: most of an 8-step recipe on one view matters more.
+  - User reviews before every commit; never commit to `main`. Push batches of work, not every step.
 - **Open questions:** none.
 
 ## The order (and why)
@@ -71,7 +72,7 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 
 ### Phase 2: Screens
 - [x] List every screen + navigation map (`docs/screens.md`)
-- [ ] ASCII sketch per screen (iPad first)
+- [x] ASCII sketch per screen (iPad first)
 - [ ] Responsive strategy: how each screen adapts across desktop, iPad and phone widths (breakpoints, what collapses)
 - [ ] Review the sketches against "fewest taps" principle
 
@@ -84,6 +85,11 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [ ] Spike (iPadOS 17): keep-awake via Wake Lock API with silent-video fallback
       (installed PWA + Safari tab), and a Web Push round-trip
 - [ ] ADR: recipe data format + image storage
+      (from the sketches: steps have a short heading, text, an optional photo and an optional tip; ingredient
+      names in step text are highlighted; quantities in step text scale with portions;
+      ingredients have a kind (fresh / long-life / pantry staple), allergens and food
+      groups; a recipe's food groups are derived from its ingredients, so "I don't eat fish"
+      = exclude recipes with any fish ingredient)
 - [ ] ADR: portion/quantity model (per-portion base, linear scaling, rounding rules)
 - [ ] Write ~5 demo recipes in that format: the **dummy data** for Phase 4, later test
       fixtures, screenshots and what other accounts see
