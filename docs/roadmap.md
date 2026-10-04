@@ -6,10 +6,21 @@ the "where were we?" when picking the project back up after a break.
 ## Now
 _Hand-off between chats. Replaced (not appended) by `/wrap` at the end of each chat._
 
-- **Branch:** `setup/workflow`: 3 commits + uncommitted PWA pivot awaiting the user's review
-- **Last done:** spec v0.6; pivoted to a web app (PWA), see ADR 001; hooks moved from `ios/` to `web/`
-- **In progress:** Spec done. Next step: Phase 2, screens.
-- **Open questions:** see "Open questions" in `docs/spec.md`
+- **Branch:** `setup/workflow`: 1 squashed commit + this wrap commit. Not pushed, no PR yet.
+- **Last done:**
+  - Workflow set up: CLAUDE.md, `/next` + `/wrap` skills, git hooks, docs skeleton
+  - Spec finished (v0.6, no open questions)
+  - Pivoted from native iOS to a web app (PWA): [ADR 001](decisions/001-web-pwa-over-native-ios.md)
+- **In progress:** nothing half-finished.
+- **Next step:** offer to push `setup/workflow` and open a PR into `main` (ask first), then start
+  **Phase 2: Screens** on a new branch `docs/screens`, beginning with "List every screen +
+  navigation map" in a new `docs/screens.md`. Use the user's Card 1 / Card 2 ASCII sketches in
+  `docs/initialDesignThoughtsPreAI.md` as the starting point for the instructions screens.
+- **Context for next chat:**
+  - Use **dummy data**: the user is still working out card scanning; real recipes aren't needed until Phase 6.
+  - User's iPad maxes out at **iPadOS 17** (affects Wake Lock; see ADR 001).
+  - User reviews before every commit; never commit to `main`.
+- **Open questions:** none.
 
 ## The order (and why)
 
@@ -53,14 +64,12 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [x] Repo structure, CLAUDE.md, docs skeleton
 - [x] Git hook dispatchers (`scripts/install-hooks.sh`)
 - [x] Decide platform: web app (PWA) ([ADR 001](decisions/001-web-pwa-over-native-ios.md))
-- [ ] Install Node.js LTS (`brew install node`)
-- [ ] Scan all recipe cards (front + back) into git-ignored `private/scans/`.
-      Flat, even light, no glare.
+- [ ] Install Node.js LTS (`brew install node`): needed from the Phase 3 spike, not for Phase 2
 
 ### Phase 1: Spec
-- [ ] Draft `docs/spec.md` from the initial design thoughts
-- [ ] Resolve open questions in the spec
-- [ ] Prioritise features: must / should / later
+- [x] Draft `docs/spec.md` from the initial design thoughts
+- [x] Resolve open questions in the spec
+- [x] Prioritise features: must / should / later
 
 ### Phase 2: Screens
 - [ ] List every screen + navigation map (`docs/screens.md`)
@@ -76,15 +85,17 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [ ] ADR: where scheduling runs (client vs server job)
 - [ ] Spike (iPadOS 17): keep-awake via Wake Lock API with silent-video fallback
       (installed PWA + Safari tab), and a Web Push round-trip
-- [ ] ADR: recipe image storage (dish photos cropped from my cards, kept private)
-- [ ] ADR: recipe data format + card import pipeline (scan → AI extraction → review), model, cost
-- [ ] Spike: extract 3–5 cards, measure accuracy + cost (output stays in `private/`)
+- [ ] ADR: recipe data format + image storage
 - [ ] ADR: portion/quantity model (per-portion base, linear scaling, rounding rules)
+- [ ] Write ~5 demo recipes in that format: the **dummy data** for Phase 4, later test
+      fixtures, screenshots and what other accounts see
 
-### Phase 3b: Import my recipe bank (alongside later phases)
+### Phase 3b: Import my recipe bank (non-blocking; needed by Phase 6)
+- [ ] Scan all recipe cards (front + back) into git-ignored `private/scans/`. Flat, even light, no glare.
+- [ ] ADR: card import pipeline (scan → AI extraction → review), model, cost
+- [ ] Spike: extract 3–5 cards, measure accuracy + cost (output stays in `private/`)
 - [ ] Build the import tool (TDD on parsing/validation)
-- [ ] Import all cards + review pass
-- [ ] Write ~5 demo recipes: seen by other accounts / App Review, plus README screenshots and test fixtures
+- [ ] Import all cards into the DB + review pass
 
 ### Phase 4: UI on fake data
 _Slices get added here once screens are agreed._
