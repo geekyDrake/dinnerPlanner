@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Root pre-commit dispatcher. Language-agnostic: it knows nothing about Swift,
+# TypeScript, Python, etc. For each top-level component (web/, backend/, ...) that has staged
+# changes AND provides an executable <component>/.hooks/pre-commit, it runs that
+# hook from inside the component, passing the staged file paths (relative to the
+# component) on stdin. Components without a hook are ignored.
+set -uo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)
+if [ "$branch" = "main" ]; then
+  echo "✗ Direct commits to main are blocked. Create a branch first: git switch -c <type>/<name>"
+  exit 1
+fi
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+status=0
+components=$(printf '%s\n' "$staged" | awk -F/ 'NF > 1 { print $1 }' | sort -u)
+
+for comp in $components; do
+  hook="$comp/.hooks/pre-commit"
+  [ -x "$hook" ] || continue
+
+  echo "▶ $comp: pre-commit"
+  if ! printf '%s\n' "$staged" | grep "^$comp/" | sed "s|^$comp/||" \
+      | (cd "$comp" && ./.hooks/pre-commit); then
+    status=1
+  fi
+done
+
+if [ $status -ne 0 ]; then
+  echo "✗ pre-commit checks failed. Fix the issues above (or bypass once with: git commit --no-verify)"
+fi
+exit $status

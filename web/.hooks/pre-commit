@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Web pre-commit: fast checks only (format + lint) on the staged files.
+# Receives staged file paths relative to web/ on stdin; runs from inside web/.
+# Delegates to package.json scripts so the toolchain (ESLint, Prettier, Biome...) is
+# chosen in the framework ADR, not hardcoded here.
+set -uo pipefail
+
+files=()
+while IFS= read -r f; do
+  [[ "$f" =~ \.(ts|tsx|js|jsx|css|json|html|md)$ ]] && [ -f "$f" ] && files+=("$f")
+done
+[ ${#files[@]} -eq 0 ] && exit 0
+
+if [ ! -f package.json ]; then
+  echo "  (no package.json yet, skipping)"
+  exit 0
+fi
+if [ ! -d node_modules ]; then
+  echo "  ⚠ dependencies not installed (cd web && npm install), skipping"
+  exit 0
+fi
+
+has_script() { node -e "process.exit(require('./package.json').scripts?.['$1'] ? 0 : 1)"; }
+
+status=0
+if has_script format:check; then
+  npm run --silent format:check -- "${files[@]}" || { echo "  ✗ formatting. Fix with: (cd web && npm run format)"; status=1; }
+fi
+if has_script lint; then
+  npm run --silent lint -- "${files[@]}" || status=1
+fi
+exit $status

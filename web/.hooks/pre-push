@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Web pre-push: slow checks (type-check, tests, production build).
+# Runs from inside web/. Each step runs only if package.json defines it.
+set -uo pipefail
+
+if [ ! -f package.json ]; then
+  echo "  (no package.json yet, skipping)"
+  exit 0
+fi
+if [ ! -d node_modules ]; then
+  echo "  ⚠ dependencies not installed (cd web && npm install), skipping"
+  exit 0
+fi
+
+has_script() { node -e "process.exit(require('./package.json').scripts?.['$1'] ? 0 : 1)"; }
+
+for step in typecheck test build; do
+  if has_script "$step"; then
+    echo "  → npm run $step"
+    npm run --silent "$step" || exit 1
+  fi
+done

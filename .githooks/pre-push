@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Root pre-push dispatcher. Same idea as pre-commit: runs
+# <component>/.hooks/pre-push for every component changed in the commits being
+# pushed. This is where the slow checks (builds, tests) live.
+set -uo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+zero="0000000000000000000000000000000000000000"
+changed=""
+
+# git feeds one line per ref being pushed: <local ref> <local sha> <remote ref> <remote sha>
+while read -r _ local_sha _ remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue # deleting a branch, nothing to check
+  if [ "$remote_sha" = "$zero" ]; then
+    # New branch: compare against where it forked from main (or check everything).
+    base=$(git merge-base "$local_sha" origin/main 2>/dev/null || true)
+    if [ -n "$base" ]; then
+      changed+=$(git diff --name-only "$base" "$local_sha")$'\n'
+    else
+      changed+=$(git ls-files)$'\n'
+    fi
+  else
+    changed+=$(git diff --name-only "$remote_sha" "$local_sha")$'\n'
+  fi
+done
+
+components=$(printf '%s\n' "$changed" | awk -F/ 'NF > 1 { print $1 }' | sort -u)
+
+status=0
+for comp in $components; do
+  hook="$comp/.hooks/pre-push"
+  [ -x "$hook" ] || continue
+  echo "▶ $comp: pre-push"
+  (cd "$comp" && ./.hooks/pre-push) || status=1
+done
+
+if [ $status -ne 0 ]; then
+  echo "✗ pre-push checks failed (bypass once with: git push --no-verify)"
+fi
+exit $status
