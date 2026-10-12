@@ -6,10 +6,20 @@ the "where were we?" when picking the project back up after a break.
 ## Now
 _Hand-off between chats. Replaced (not appended) by `/wrap` at the end of each chat._
 
-- **Branch:** `setup/workflow`: 3 commits + uncommitted PWA pivot awaiting the user's review
-- **Last done:** spec v0.6; pivoted to a web app (PWA), see ADR 001; hooks moved from `ios/` to `web/`
-- **In progress:** Spec done. Next step: Phase 2, screens.
-- **Open questions:** see "Open questions" in `docs/spec.md`
+- **Branch:** `docs/screens`, pushed. No PR yet (`gh` needs `gh auth login`).
+- **Last done:** `docs/screens.md` v0.4: journeys, 6 screens (3 places: Weeks, Shopping,
+  Settings), nav map, iPad sketches of every screen. Spec v0.8: weeks not days, weekly review,
+  Mon–Sun grocery week, bulk buy (S5), ingredient kinds (fresh / long-life / pantry staple),
+  diet as food groups, Google sign-in, Card 1 Overview / Card 2 Cook.
+- **In progress:** nothing half-finished.
+- **Next step:** open a PR for `docs/screens` into `main` (ask first), then Phase 2
+  "Responsive strategy" (desktop / iPad / phone: breakpoints, what collapses, tab bar position).
+- **Context for next chat:**
+  - Use **dummy data**; real recipes aren't needed until Phase 6.
+  - User's iPad maxes out at **iPadOS 17** (affects Wake Lock; see ADR 001).
+  - Card 2 step photos should be small: most of an 8-step recipe on one view matters more.
+  - User reviews before every commit; never commit to `main`. Push batches of work, not every step.
+- **Open questions:** none.
 
 ## The order (and why)
 
@@ -53,38 +63,44 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [x] Repo structure, CLAUDE.md, docs skeleton
 - [x] Git hook dispatchers (`scripts/install-hooks.sh`)
 - [x] Decide platform: web app (PWA) ([ADR 001](decisions/001-web-pwa-over-native-ios.md))
-- [ ] Install Node.js LTS (`brew install node`)
-- [ ] Scan all recipe cards (front + back) into git-ignored `private/scans/`.
-      Flat, even light, no glare.
+- [ ] Install Node.js LTS (`brew install node`): needed from the Phase 3 spike, not for Phase 2
 
 ### Phase 1: Spec
-- [ ] Draft `docs/spec.md` from the initial design thoughts
-- [ ] Resolve open questions in the spec
-- [ ] Prioritise features: must / should / later
+- [x] Draft `docs/spec.md` from the initial design thoughts
+- [x] Resolve open questions in the spec
+- [x] Prioritise features: must / should / later
 
 ### Phase 2: Screens
-- [ ] List every screen + navigation map (`docs/screens.md`)
-- [ ] ASCII sketch per screen (iPad first)
+- [x] List every screen + navigation map (`docs/screens.md`)
+- [x] ASCII sketch per screen (iPad first)
 - [ ] Responsive strategy: how each screen adapts across desktop, iPad and phone widths (breakpoints, what collapses)
 - [ ] Review the sketches against "fewest taps" principle
 
 ### Phase 3: Architecture
 - [ ] ADR: front-end framework + tooling (e.g. React/Vite vs Next.js vs SvelteKit)
 - [ ] ADR: backend + DB platform (e.g. Supabase vs Firebase vs Vercel + Postgres)
-- [ ] ADR: auth (passkeys / magic link) + recipe access allow-list
-- [ ] ADR: data model
+- [ ] ADR: auth (Google sign-in, own user ID + linked identities) + recipe access allow-list
+- [ ] ADR: data model (recipes have an owner and a source; private by default; leave room
+      for L6 edits and L7 share codes, imported cards never shareable)
 - [ ] ADR: where scheduling runs (client vs server job)
 - [ ] Spike (iPadOS 17): keep-awake via Wake Lock API with silent-video fallback
       (installed PWA + Safari tab), and a Web Push round-trip
-- [ ] ADR: recipe image storage (dish photos cropped from my cards, kept private)
-- [ ] ADR: recipe data format + card import pipeline (scan → AI extraction → review), model, cost
-- [ ] Spike: extract 3–5 cards, measure accuracy + cost (output stays in `private/`)
+- [ ] ADR: recipe data format + image storage
+      (from the sketches: steps have a short heading, text, an optional photo and an optional tip; ingredient
+      names in step text are highlighted; quantities in step text scale with portions;
+      ingredients have a kind (fresh / long-life / pantry staple), allergens and food
+      groups; a recipe's food groups are derived from its ingredients, so "I don't eat fish"
+      = exclude recipes with any fish ingredient)
 - [ ] ADR: portion/quantity model (per-portion base, linear scaling, rounding rules)
+- [ ] Write ~5 demo recipes in that format: the **dummy data** for Phase 4, later test
+      fixtures, screenshots and what other accounts see
 
-### Phase 3b: Import my recipe bank (alongside later phases)
+### Phase 3b: Import my recipe bank (non-blocking; needed by Phase 6)
+- [ ] Scan all recipe cards (front + back) into git-ignored `private/scans/`. Flat, even light, no glare.
+- [ ] ADR: card import pipeline (scan → AI extraction → review), model, cost
+- [ ] Spike: extract 3–5 cards, measure accuracy + cost (output stays in `private/`)
 - [ ] Build the import tool (TDD on parsing/validation)
-- [ ] Import all cards + review pass
-- [ ] Write ~5 demo recipes: seen by other accounts / App Review, plus README screenshots and test fixtures
+- [ ] Import all cards into the DB + review pass
 
 ### Phase 4: UI on fake data
 _Slices get added here once screens are agreed._
