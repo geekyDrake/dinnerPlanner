@@ -1,6 +1,6 @@
 # Dinner Planner: Spec
 
-**Status:** draft v0.8. Platform: web app (PWA), see ADR 001. No implementation details here (those go in ADRs).
+**Status:** draft v0.9. Platform: web app (PWA), see ADR 001. No implementation details here (those go in ADRs).
 
 ## Problem
 Planning dinners for a diet takes effort: picking varied meals from a recipe bank and
@@ -78,10 +78,13 @@ cook and shop.
 - **L3.** Suggest alternatives for missing ingredients.
 - **L4.** Other sign-in methods (Sign in with Apple, passkeys, email).
 - **L5.** In-app recipe upload for other users (reuses the M8 pipeline). Needs a cost model.
+- **L6.** Edit a recipe in the app (fix a typo, change an amount).
+- **L7.** Share your own recipes via a code. Imported meal-kit cards can never be shared.
 
 ### Not doing
 - Publishing recipe content in any form; scraping any service's app/website.
-- Social/sharing features, ratings feeds, shopping-app integrations.
+- Social features (feeds, ratings, followers), shopping-app integrations.
+- Sharing imported meal-kit recipes in any way (see L7).
 
 ## Non-functional
 - Simple, modern, minimal taps. Lightweight app; heavy lifting off-device where sensible.

@@ -80,7 +80,8 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [ ] ADR: front-end framework + tooling (e.g. React/Vite vs Next.js vs SvelteKit)
 - [ ] ADR: backend + DB platform (e.g. Supabase vs Firebase vs Vercel + Postgres)
 - [ ] ADR: auth (Google sign-in, own user ID + linked identities) + recipe access allow-list
-- [ ] ADR: data model
+- [ ] ADR: data model (recipes have an owner and a source; private by default; leave room
+      for L6 edits and L7 share codes, imported cards never shareable)
 - [ ] ADR: where scheduling runs (client vs server job)
 - [ ] Spike (iPadOS 17): keep-awake via Wake Lock API with silent-video fallback
       (installed PWA + Safari tab), and a Web Push round-trip
