@@ -42,8 +42,8 @@ cook and shop.
   Default pattern is configurable (e.g. "3 sessions/week, 2 portions each").
 - **M3. Adjust the plan**: swap, skip, move (to another week), or change portions of a session.
   Swapping offers **2–3 suggested alternatives** that fit preferences and variety.
-  Adjusting happens mainly in the **weekly review** a couple of days before the week, before
-  shopping. Once a week has started, its sessions can be skipped or moved but not swapped
+  Adjusting happens mainly in the **weekly review**, which opens on the Friday before the
+  week, before shopping. Once a week has started, its sessions can be skipped or moved but not swapped
   (the ingredients are already bought). The generated plan is a starting point, not a commitment.
 - **M4. No repeats**: use history to avoid repeats until the whole bank has been used.
 - **M5. Grocery list** *(first-class feature)*: aggregated quantities for a fixed

@@ -1,6 +1,6 @@
 # Screens
 
-**Status:** draft v0.4. Screen list, navigation map, iPad sketches. Responsive strategy comes next
+**Status:** draft v0.6. Screen list, navigation map, iPad sketches, responsive strategy, fewest-taps review. Phase 2 done
 (see `roadmap.md`, Phase 2).
 
 ## Approach
@@ -84,18 +84,13 @@ Top-level nav: **2 tabs (Weeks, Shopping) + a settings icon**.
 
 ### Taps from launch
 
-| Task | Taps |
-|------|------|
-| Cook one of this week's meals | 1 |
-| Grocery list | 1 |
-| Swap a meal (weekly review) | 2 (session → pick a suggestion) |
-| Mark pantry item out | 3 (Shopping → Pantry → tick) |
+See [Fewest-taps review](#fewest-taps-review) for every task.
 
 ## Sketches (iPad landscape)
 
 Low-fi: layout and content only, no styling. Recipes shown are made-up demo recipes.
-`[ ]` = button, `☐/☑` = checkbox, `‹ ›` = navigate, `⋯` = more. Phone/desktop layouts are the
-next roadmap item. Tab bar position on iPad (bottom bar vs sidebar) is decided there too.
+`[ ]` = button, `☐/☑` = checkbox, `‹ ›` = navigate, `⋯` = more. Phone and desktop layouts are
+in [Responsive strategy](#responsive-strategy).
 
 ### Weeks (home)
 
@@ -129,6 +124,8 @@ next roadmap item. Tab bar position on iPad (bottom bar vs sidebar) is decided t
 - **This week:** tap a card → Instructions (you're cooking). `⋯` → Session sheet (skip/move/portions).
 - **Next week and later:** tap a meal → Session sheet (swap is offered here).
 - **Groceries button** → Shopping › Groceries for next week.
+- **From Friday** (next week's review opens): a banner at the top, "Next week is ready to review ›",
+  scrolls to next week. On iPad next week is already visible; the banner matters most on phone.
 - No days are shown; the week is a set of meals.
 - Empty: "No recipes in your bank yet". Loading: grey placeholder cards ("skeletons").
 
@@ -185,8 +182,10 @@ Slides up over Weeks (a bottom sheet on phone, a centred panel on iPad). Example
 - Left: title, prep + total time, portions, tags, dish image, nutrition per portion.
 - Right: ingredient **names** (no amounts) with a small icon (`◦`). **Ticks are shared with
   the grocery list**: ticking either one ticks both.
-- "You need" = pantry staples; any marked "out" in the pantry are flagged.
+- "You need" = pantry staples; any marked "out" in the pantry are flagged. **Tap one to mark
+  it out** (also on Card 2's sidebar): it goes on the next grocery list, toast with Undo.
 - `☀ Awake` = wake lock is on (screen won't sleep). Swipe left/right or use the toggle to switch cards.
+- Reopening a recipe resumes the card and scroll position you left.
 
 ### Instructions: Card 2 (cook: amounts + steps on one page)
 
@@ -252,7 +251,7 @@ Slides up over Weeks (a bottom sheet on phone, a centred panel on iPad). Example
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-- Default: **one Mon–Sun week**, the week you're shopping for (next week once its review opens).
+- Default: **one Mon–Sun week**, the week you're shopping for (next week once its review opens on Friday).
   `‹ ›` moves the start week (this week / next week).
 - **Bulk buy (S5):** pick 2–4 weeks to see their combined list. Quantities add up across the
   weeks. **Fresh** is collapsed in a multi-week view ("buy nearer the time"); long-life items
@@ -323,6 +322,136 @@ Slides up over Weeks (a bottom sheet on phone, a centred panel on iPad). Example
 │                                                                                          │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Responsive strategy
+
+Layouts change by **available width**, not by device. The same rules then cover split-screen
+on iPad, a resized desktop window, and rotating the iPad mid-recipe.
+
+### Width ranges
+
+Widths are in CSS pixels (points on Apple devices, not physical pixels).
+
+| Range | Width | Typical devices |
+|-------|-------|-----------------|
+| **Phone** | < 600 | iPhone portrait (375–430), iPad split-screen (narrow side) |
+| **Tablet** | 600 – 1023 | iPad portrait (768–834), iPad split-screen (wide side) |
+| **Wide** | ≥ 1024 | iPad landscape (1024–1366), desktop |
+
+- **Test device:** the user's iPad, probably an iPad Pro 10.5" (2017; to be confirmed):
+  1112 wide in landscape (Wide), 834 in portrait (Tablet). Its last update is iPadOS 17.
+- **Design target for Wide is 1024**, the narrowest landscape iPad, so the layout has some
+  spare room on the test device and fits every iPad.
+- **Desktop:** the Wide layout, centred, with a max content width of 1280. No desktop-only layout.
+
+### Global rules
+
+- **Navigation:** a bottom tab bar (Weeks, Shopping) at every width. Only 2 tabs, so a
+  sidebar would waste the width that Card 2 needs, and one nav component is simpler.
+  Settings stays a ⚙ icon top-right.
+- **Instructions hides the tab bar** (full-screen, back button top-left) to give the steps room.
+- **Touch targets** at least 44 × 44 at every width, including desktop (touch-first).
+- **Rotation / resize keeps your place:** same card, same scroll position, same ticks.
+- **Sheets:** bottom sheet on Phone; centred panel (about 560 wide) on Tablet and Wide.
+
+### Per screen
+
+| Screen | Phone (< 600) | Tablet (600–1023) | Wide (≥ 1024) |
+|--------|---------------|-------------------|---------------|
+| **Weeks** | One column. Session cards turn into rows: thumbnail left, title + time right. Groceries button goes under the "Next week" heading. | 2-column card grid. | 3-column card grid: the default 3 sessions a week fill one row; more sessions wrap. |
+| **Session sheet** | Bottom sheet, full width. Swap suggestions in a sideways-scrolling row. | Centred panel. | Centred panel. |
+| **Card 1 · Overview** | One column: title, image, macros (4 × 2 grid), ingredients, you need / equipment / allergens. | Two columns, image smaller. | Two columns (as sketched). |
+| **Card 2 · Cook** | Steps in one column, small photo above each. Ingredients move into a sheet: a sticky **Ingredients** button opens it over the steps. | Sidebar + 2 step columns. | Sidebar + 3 step columns (as sketched). |
+| **Groceries** | One column. "Which recipes" moves to a second line under the item. Week + weeks selector wraps onto two lines. | Single list, max width ~720, centred. | Same as Tablet. A list reads better narrow than stretched. |
+| **Pantry** | Chips wrap. | Chips wrap. | Chips wrap. |
+| **Settings** | Labels above controls; food-group chips wrap. | Label column + controls (as sketched). | Same, max width ~720. |
+| **Sign in** | Centred. | Centred. | Centred. |
+
+### Phone: Weeks
+
+```text
+┌──────────────────────────────────────┐
+│ Dinner Planner                    ⚙  │
+├──────────────────────────────────────┤
+│ THIS WEEK · 5 – 11 Oct               │
+│ ┌──────┐ Chickpea Tikka Bowl      ⋯  │
+│ │ img  │ 35 min · 2 portions         │
+│ └──────┘                             │
+│ ┌──────┐ Lemon Herb Salmon        ⋯  │
+│ │ img  │ 25 min · 2 portions         │
+│ └──────┘                             │
+│ ┌──────┐ Black Bean Chilli        ⋯  │
+│ │ img  │ 40 min · 2 portions         │
+│ └──────┘                             │
+│                                      │
+│ NEXT WEEK · 12 – 18 Oct              │
+│ Review before you shop               │
+│ [ Groceries · 14 items            › ]│
+│ ┌──────┐ Miso Noodle Soup            │
+│ │ img  │ 20 min · 2 portions         │
+│ └──────┘                             │
+│ ...                                  │
+├──────────────────────────────────────┤
+│   [ ▦ Weeks ]      [ 🛒 Shopping ]   │
+└──────────────────────────────────────┘
+```
+
+### Phone: Card 2 · Cook
+
+```text
+┌──────────────────────────────────────┐      ┌──────────────────────────────────────┐
+│ ‹  Chickpea Tikka Bowl      ☀ Awake  │      │ ‹  Chickpea Tikka Bowl      ☀ Awake  │
+│    [ Overview ]  [■ Cook ]           │      │    [ Overview ]  [■ Cook ]           │
+├──────────────────────────────────────┤      ├──────────────────────────────────────┤
+│ ┌──────────────────────────────────┐ │      │ 1 COOK RICE                          │
+│ │          [ photo, short ]        │ │      │ Put the **rice** on to boil...       │
+│ └──────────────────────────────────┘ │      ├──────────────────────────────────────┤
+│ 1 COOK RICE                          │      │ INGREDIENTS · 2 portions          ✕  │
+│ Put the **rice** on to boil with     │      │ Chickpeas                     1 tin  │
+│ 300ml water...                       │      │ Red onion                         1  │
+│                                      │      │ Baby spinach                    80g  │
+│ ┌──────────────────────────────────┐ │      │ Basmati rice                   130g  │
+│ │          [ photo, short ]        │ │      │ ...                                  │
+│ └──────────────────────────────────┘ │      │ YOU NEED                             │
+│ 2 PREP VEG                           │      │ Olive oil                    1 tbsp  │
+│ Slice the **red onion**...           │      │ ...                                  │
+│ ...                                  │      │                                      │
+├──────────────────────────────────────┤      │                                      │
+│        [ Ingredients · 7  ▲ ]        │      │                                      │
+└──────────────────────────────────────┘      └──────────────────────────────────────┘
+          steps (sheet closed)                      ingredients sheet open
+```
+
+- The **Ingredients** button stays at the bottom while you scroll the steps. Tapping it slides up
+  a sheet with the sidebar's content; swipe down or ✕ to go back to the same step.
+- Phone cooking is a fallback (the iPad is the main kitchen device), so a sheet is good enough here.
+
+## Fewest-taps review
+
+Every task from the journeys, counted from opening the app. Swipes count as taps. Ticks,
+swaps, skips and moves never ask "are you sure?"; they show an Undo toast instead.
+
+| Task | How often | Taps | Verdict / change |
+|------|-----------|------|------------------|
+| Cook one of this week's meals | 3×/week | 1 | ✓ Card → Overview. Wake lock is automatic. |
+| Get to the steps | 3×/week | +1 | ✓ Swipe or "Cook". **Change:** reopening a recipe resumes the card and scroll position you left (e.g. after the app reloads mid-cook). |
+| Open next week's review | weekly | 0–1 | **Change:** from **Friday** (review opens), Weeks shows a banner at the top: "Next week is ready to review ›". On iPad next week is visible anyway; on phone the banner saves a scroll. |
+| Swap a meal | weekly | 2 | ✓ Meal → pick a suggestion. |
+| Skip a meal | occasional | 2 | ✓ Meal (or `⋯`) → Skip. |
+| Change portions | occasional | 2+ | ✓ Meal → `+`/`−`. |
+| Move a meal to another week | rare | 3 | ✓ Meal → week picker → week. Rare enough. |
+| Grocery list | weekly + in shop | 1 | ✓ Opens on the week you're shopping for. |
+| Tick a grocery item | ~15×/week | 1 each | ✓ No confirm; moves to Got. |
+| Bulk-buy view | monthly | 2 | ✓ Shopping → "3 weeks". |
+| Mark a pantry staple as out | occasional, often mid-cook | 3 → **1** | **Change:** tap a "You need" item on Card 1 or Card 2 to mark it out (toast + Undo). The Pantry tab is still there for a full check. |
+| Check groceries while prepping | weekly | 1 | ✓ Card 1 ticks mirror the grocery list. |
+| Back to Weeks from a recipe | every cook | 1 | ✓ |
+| First-run setup | once | 2 | ✓ Google → setup screen with defaults filled in → "Plan my dinners". |
+| Change a setting | rare | 2+ | ✓ ⚙ → change (saves immediately) → popup on leaving. |
+| Reminder → review (S4) | weekly | 1 | ✓ Notification opens next week's review directly. |
+
+**Result:** every weekly task is 2 taps or fewer. Three changes: the review banner on Weeks,
+marking pantry items out from the recipe, and resuming where you left off in a recipe.
 
 ## Coverage: Must features → screens
 

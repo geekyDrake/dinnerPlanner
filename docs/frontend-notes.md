@@ -16,4 +16,11 @@ backend concepts are welcome.
 
 ## Notes
 
-_Entries get added as slices are built._
+### Responsive breakpoints
+**What:** layouts switch at set *widths* (here 600 and 1024 CSS px), not per device. CSS
+"media queries" (or container queries) apply different rules above/below each width.
+**Backend analogy:** feature flags keyed on one input (available width) instead of
+per-client special cases: one code path, three configurations.
+**In this repo:** `docs/screens.md` › Responsive strategy (the rules; code comes in Phase 4).
+**Gotcha:** CSS px ≠ device pixels. An iPad is 1024 "points" wide in landscape even though the
+screen has 2048 physical pixels. Design and test in CSS px.
