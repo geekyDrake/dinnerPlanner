@@ -6,17 +6,19 @@ the "where were we?" when picking the project back up after a break.
 ## Now
 _Hand-off between chats. Replaced (not appended) by `/wrap` at the end of each chat._
 
-- **Branch:** `docs/screens`, pushed. No PR yet (`gh` needs `gh auth login`).
-- **Last done:** `docs/screens.md` v0.4: journeys, 6 screens (3 places: Weeks, Shopping,
-  Settings), nav map, iPad sketches of every screen. Spec v0.8: weeks not days, weekly review,
-  Mon–Sun grocery week, bulk buy (S5), ingredient kinds (fresh / long-life / pantry staple),
-  diet as food groups, Google sign-in, Card 1 Overview / Card 2 Cook.
-- **In progress:** nothing half-finished.
-- **Next step:** open a PR for `docs/screens` into `main` (ask first), then Phase 2
-  "Responsive strategy" (desktop / iPad / phone: breakpoints, what collapses, tab bar position).
+- **Branch:** `docs/responsive` (from `main`; `docs/screens` merged as PR #3). Uncommitted.
+- **Last done:** Phase 2 finished. Fewest-taps review (`docs/screens.md` v0.6): review
+  banner from Friday, mark pantry items out from the recipe, resume where you left a recipe.
+  Responsive strategy in `docs/screens.md` v0.5: width ranges Phone < 600,
+  Tablet 600–1023, Wide ≥ 1024 (design target 1024 landscape); bottom tab bar everywhere;
+  per-screen rules; phone sketches for Weeks and Card 2 (ingredients in a sheet).
+- **In progress:** awaiting the user's review before commit.
+- **Next step:** Phase 3 Architecture, starting with the ADR on front-end framework + tooling.
+  Install Node.js LTS first (Phase 0 item).
 - **Context for next chat:**
   - Use **dummy data**; real recipes aren't needed until Phase 6.
-  - User's iPad maxes out at **iPadOS 17** (affects Wake Lock; see ADR 001).
+  - User's iPad: probably **iPad Pro 10.5" (2017)**, 1112 × 834; maxes out at **iPadOS 17**
+    (affects Wake Lock; see ADR 001). User will confirm the model.
   - Card 2 step photos should be small: most of an 8-step recipe on one view matters more.
   - User reviews before every commit; never commit to `main`. Push batches of work, not every step.
 - **Open questions:** none.
@@ -73,8 +75,8 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 ### Phase 2: Screens
 - [x] List every screen + navigation map (`docs/screens.md`)
 - [x] ASCII sketch per screen (iPad first)
-- [ ] Responsive strategy: how each screen adapts across desktop, iPad and phone widths (breakpoints, what collapses)
-- [ ] Review the sketches against "fewest taps" principle
+- [x] Responsive strategy: how each screen adapts across desktop, iPad and phone widths (breakpoints, what collapses)
+- [x] Review the sketches against "fewest taps" principle
 
 ### Phase 3: Architecture
 - [ ] ADR: front-end framework + tooling (e.g. React/Vite vs Next.js vs SvelteKit)
