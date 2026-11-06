@@ -9,6 +9,7 @@ and what would make us revisit it.
 
 ## Index
 - [001: Web app (PWA) instead of native iOS](001-web-pwa-over-native-ios.md): accepted
+- [002: Front-end: React + Vite + TypeScript SPA](002-frontend-react-vite.md): accepted
 
 ## Template
 
