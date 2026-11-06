@@ -6,16 +6,20 @@ the "where were we?" when picking the project back up after a break.
 ## Now
 _Hand-off between chats. Replaced (not appended) by `/wrap` at the end of each chat._
 
-- **Branch:** `docs/responsive` (from `main`; `docs/screens` merged as PR #3). Uncommitted.
-- **Last done:** Phase 2 finished. Fewest-taps review (`docs/screens.md` v0.6): review
-  banner from Friday, mark pantry items out from the recipe, resume where you left a recipe.
-  Responsive strategy in `docs/screens.md` v0.5: width ranges Phone < 600,
-  Tablet 600–1023, Wide ≥ 1024 (design target 1024 landscape); bottom tab bar everywhere;
-  per-screen rules; phone sketches for Weeks and Card 2 (ingredients in a sheet).
-- **In progress:** awaiting the user's review before commit.
-- **Next step:** Phase 3 Architecture, starting with the ADR on front-end framework + tooling.
-  Install Node.js LTS first (Phase 0 item).
+- **Branch:** `docs/adr-frontend`: committed and pushed. PR into `main` to be opened/merged by
+  the user (`gh` isn't logged in here; `gh auth login` fixes that). Check it's merged first.
+- **Last done:**
+  - [ADR 002](decisions/002-frontend-react-vite.md) accepted: React + Vite + TypeScript static
+    SPA, `vite-plugin-pwa`, React Router, Vitest, CSS Modules, ESLint/Prettier, npm.
+  - `docs/frontend-notes.md`: key web basics for the user (DOM, SPA vs SSR, static vs dynamic
+    typing, type erasure, Vite, service worker, PWA, compile vs build, CSS vs Tailwind).
+- **In progress:** nothing half-finished.
+- **Next step:** user upgrades Node (Phase 0: `nvm install --lts && nvm alias default lts/*`).
+  Then Phase 3 **"Codebase structure guide"**: screens vs components vs hooks vs domain vs data,
+  mapped to backend layers (endpoint / client / domain / business logic / DB). Then set up `web/`.
 - **Context for next chat:**
+  - User is a backend (Java) engineer: explain front-end ideas with backend analogies, briefly,
+    and record key learnings in `docs/frontend-notes.md`.
   - Use **dummy data**; real recipes aren't needed until Phase 6.
   - User's iPad: probably **iPad Pro 10.5" (2017)**, 1112 × 834; maxes out at **iPadOS 17**
     (affects Wake Lock; see ADR 001). User will confirm the model.
@@ -65,7 +69,8 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [x] Repo structure, CLAUDE.md, docs skeleton
 - [x] Git hook dispatchers (`scripts/install-hooks.sh`)
 - [x] Decide platform: web app (PWA) ([ADR 001](decisions/001-web-pwa-over-native-ios.md))
-- [ ] Install Node.js LTS (`brew install node`): needed from the Phase 3 spike, not for Phase 2
+- [ ] Upgrade Node.js to the current LTS via nvm (`nvm install --lts && nvm alias default lts/*`):
+      this Mac has Node 18 (end-of-life) from an old installer. Needed before the `web/` setup.
 
 ### Phase 1: Spec
 - [x] Draft `docs/spec.md` from the initial design thoughts
@@ -79,7 +84,11 @@ backend/    backend service (language/platform decided in an ADR), its own hooks
 - [x] Review the sketches against "fewest taps" principle
 
 ### Phase 3: Architecture
-- [ ] ADR: front-end framework + tooling (e.g. React/Vite vs Next.js vs SvelteKit)
+- [x] ADR: front-end framework + tooling ([ADR 002](decisions/002-frontend-react-vite.md): React + Vite + TS SPA)
+- [ ] Codebase structure guide: what screens, components, hooks, domain and data layers are,
+      mapped to the backend layers the user knows (before `web/` setup)
+- [ ] Set up `web/`: Vite + React + TS, ESLint/Prettier, Vitest, `vite-plugin-pwa`, `.nvmrc`,
+      `web/.hooks/{pre-commit,pre-push}`; hello-world installs to the iPad home screen
 - [ ] ADR: backend + DB platform (e.g. Supabase vs Firebase vs Vercel + Postgres)
 - [ ] ADR: auth (Google sign-in, own user ID + linked identities) + recipe access allow-list
 - [ ] ADR: data model (recipes have an owner and a source; private by default; leave room
